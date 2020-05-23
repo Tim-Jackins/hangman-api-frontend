@@ -74,9 +74,8 @@ export class UserForm extends React.Component<IFormProps, IFormState> {
 
     if (this.validateForm()) {
       const submitSuccess: boolean = await this.submitForm()
-      this.setState({ submitSuccess })
       this.props.onFinish()
-      console.log(this.props)
+      this.setState({ submitSuccess })
     }
   }
 
