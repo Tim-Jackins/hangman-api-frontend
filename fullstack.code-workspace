@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "backend"
+		},
+		{
+			"path": "frontend"
+		}
+	],
+	"settings": {
+		// For the backend
+		// venv path gained using: pipenv --venv
+		"python.pythonPath": "/home/jack/.local/share/virtualenvs/backend-j7P-r0M9/bin/python3.8",
+		"python.linting.pylintPath": "/home/jack/.local/share/virtualenvs/backend-j7P-r0M9/bin/pylint",
+		"python.linting.pylintArgs": ["--load-plugins", "pylint-flask"]
+
+		// For the frontend
+	}
+}
