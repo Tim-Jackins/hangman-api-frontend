@@ -19,6 +19,8 @@ import {
 import { UserForm } from "./UserForm"
 import { Field } from "./Field"
 
+const api_root = 'http://127.0.0.1:5000/'
+
 type MyProps = {
   // using `interface` is also ok
   message: string
@@ -43,18 +45,26 @@ export default class App extends React.Component<MyProps, MyState> {
   // componentDidUpdate() {
   // }
 
-  tryToSignUp() {
-    console.log("Trying to sign up.")
-    // event.preventDefault();
-    // const data = new FormData(event.target);
-    
-    // fetch('/api/form-submit-url', {
-    //   method: 'POST',
-    //   body: data,
-    // })
+  public tryToSignUp(form: HTMLFormElement) {
+    // console.log("Trying to sign up.")
+    // console.log(form.serializeArray())
+    const data = new FormData(form)
+
+    const body = {
+      'username': data.get('username'),
+      'password': data.get('password')
+    }
+
+    fetch(api_root + 'register/', {
+      method: 'POST',
+      body: body
+    })
   }
 
   render() {
+    // console.log('in parent')
+    // console.log(this.tryToSignUp)
+    // this.tryToSignUp()
     return (
       <Router>
         <Navbar bg="light" expand="lg">
@@ -78,7 +88,40 @@ export default class App extends React.Component<MyProps, MyState> {
         <div className="container">
           <Switch>
             <Route path="/sign_up">
-              <SignUp onFinish={this.tryToSignUp} />
+            {/* <form>
+                    <fieldset>
+                        <legend>Choices</legend>
+
+                        <input type="radio" name="choice" id="choice1" value="choice1" checked/>
+                        <label htmlFor="choice1">Choice 1</label>
+
+                        <input type="radio" name="choice" id="choice2" value="choice2"/>
+                        <label htmlFor="choice2">Choice 2</label>
+                    </fieldset>
+                    <button type="submit">Do The Thing!</button>
+            </form> */}
+
+              {/* <SignUp onFinish={this.tryToSignUp} /> */}
+              <UserForm
+                action="http://localhost:4351/api/contactus"
+                onFinish={ this.tryToSignUp }
+                body={() => (
+                  <React.Fragment>
+                    <Jumbotron className="text-center mt-3">
+                      <h1>Sign Up</h1>
+                    </Jumbotron>
+                    <Field id="username" label="Username" editor="textbox" />
+                    <Field id="password" label="Password" editor="password" />
+                    {/* <Field
+            id="reason"
+            label="Reason"
+            editor="dropdown"
+            options={["", "Marketing", "Support", "Feedback", "Jobs"]}
+          />
+          <Field id="notes" label="Notes" editor="multilinetextbox" /> */}
+                  </React.Fragment>
+                )}
+              />
             </Route>
             <Route path="/topics">
               <Topics />
@@ -97,32 +140,32 @@ function Home() {
   return <h1>Home</h1>
 }
 
-function SignUp(FProps: any) {
-  
-
-  return (
-    <UserForm
-      action="http://localhost:4351/api/contactus"
-      onFinish={ FProps.onFinish }
-      body={() => (
-        <React.Fragment>
-          <Jumbotron className="text-center mt-3">
-            <h1>Sign Up</h1>
-          </Jumbotron>
-          <Field id="username" label="Username" editor="textbox"/>
-          <Field id="password" label="Password" editor="password"/>
-          {/* <Field
-            id="reason"
-            label="Reason"
-            editor="dropdown"
-            options={["", "Marketing", "Support", "Feedback", "Jobs"]}
-          />
-          <Field id="notes" label="Notes" editor="multilinetextbox" /> */}
-        </React.Fragment>
-      )}
-    />
-  )
-}
+// function SignUp(FProps: any) {
+//   console.log("inside first function")
+//   console.log(FProps.onFinish)
+//   return (
+//     <UserForm
+//       action="http://localhost:4351/api/contactus"
+//       onFinish={FProps.onFinish}
+//       body={() => (
+//         <React.Fragment>
+//           <Jumbotron className="text-center mt-3">
+//             <h1>Sign Up</h1>
+//           </Jumbotron>
+//           <Field id="username" label="Username" editor="textbox" />
+//           <Field id="password" label="Password" editor="password" />
+//           {/* <Field
+//             id="reason"
+//             label="Reason"
+//             editor="dropdown"
+//             options={["", "Marketing", "Support", "Feedback", "Jobs"]}
+//           />
+//           <Field id="notes" label="Notes" editor="multilinetextbox" /> */}
+//         </React.Fragment>
+//       )}
+//     />
+//   )
+// }
 
 function Topics() {
   let match = useRouteMatch()

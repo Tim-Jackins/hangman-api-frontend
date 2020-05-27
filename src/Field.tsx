@@ -36,6 +36,7 @@ export const Field: React.SFC<IFieldProps> = ({
       {editor!.toLowerCase() === "textbox" && (
         <input
           id={id}
+          name={id}
           type="text"
           value={value}
           onChange={
@@ -53,6 +54,7 @@ export const Field: React.SFC<IFieldProps> = ({
       {editor!.toLowerCase() === "password" && (
         <input
           id={id}
+          name={id}
           type="password"
           value={value}
           onChange={

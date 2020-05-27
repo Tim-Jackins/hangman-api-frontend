@@ -9,7 +9,7 @@ interface IFormProps {
   action: string
 
   /* Function given by the parent to return information back to parent */
-  onFinish: () => void
+  onFinish: boolean
 
   body: any
 }
@@ -46,7 +46,8 @@ export class UserForm extends React.Component<IFormProps, IFormState> {
       errors,
       values,
     }
-    console.log(props)
+    // console.log('inside userform')
+    // console.log(props.onFinish)
   }
 
   /**
@@ -55,7 +56,7 @@ export class UserForm extends React.Component<IFormProps, IFormState> {
    */
   private haveErrors(errors: IErrors) {
     let haveError: boolean = false
-    Object.keys(errors).map((key: string) => {
+    Object.keys(errors).map((key: string): void => {
       if (errors[key].length > 0) {
         haveError = true
       }
@@ -68,13 +69,18 @@ export class UserForm extends React.Component<IFormProps, IFormState> {
    * @param {React.FormEvent<HTMLFormElement>} e - The form event
    */
   private handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
+    e: React.SyntheticEvent
   ): Promise<void> => {
     e.preventDefault()
+    let target = e.target as HTMLFormElement
+
+
+    // var formData = new FormData(document.querySelector('form'))
 
     if (this.validateForm()) {
-      const submitSuccess: boolean = await this.submitForm()
-      this.props.onFinish()
+      const submitSuccess: boolean = this.props.onFinish(target)
+      // await this.submitForm()
+      
       this.setState({ submitSuccess })
     }
   }
@@ -93,7 +99,7 @@ export class UserForm extends React.Component<IFormProps, IFormState> {
    * @returns {boolean} - Whether the form submission was successful or not
    */
   private async submitForm(): Promise<boolean> {
-    // TODO - submit the form
+    // TODO - submit form
     return true
   }
 
@@ -122,6 +128,7 @@ export class UserForm extends React.Component<IFormProps, IFormState> {
               The form was successfully submitted!
             </div>
           )}
+          
           {submitSuccess === false && !this.haveErrors(errors) && (
             <div className="alert alert-danger" role="alert">
               Sorry, an unexpected error has occurred
