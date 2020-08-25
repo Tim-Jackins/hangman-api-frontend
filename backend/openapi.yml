@@ -1,0 +1,185 @@
+openapi: 3.0.0
+
+info:
+  version: "0.1.0"
+  title: Hangman
+  description: >-
+    This is a basic api for playing hangman!
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: src.controllers.security.decode_token
+
+paths:
+  /users/register/:
+    post:
+      operationId: src.controllers.user.register
+      summary: Register as a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              example:
+                username: john_doe
+                password: "12345678"
+      responses:
+        201:
+          description: Successfully registered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  public_id:
+                    type: string
+                  username:
+                    type: string
+                example:
+                  public_id: ed4cb460-232c-46c8-80a8-36d7ebe97483
+                  username: john_doe
+        403:
+          description: Username or password is not valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                example:
+                  error:
+                    - Username must be between 5 and 20 characters
+  /users/:
+    get:
+      security:
+        - bearerAuth: []
+      operationId: src.controllers.user.get
+      summary: Get a list of all users
+      responses:
+        "200":
+          description: Remove this in prod
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    post:
+      operationId: src.controllers.user.post
+      summary: Login as a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              example:
+                username: john_doe
+                password: "12345678"
+      responses:
+        200:
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  public_id:
+                    type: string
+                  username:
+                    type: string
+                example:
+                  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+                  public_id: ed4cb460-232c-46c8-80a8-36d7ebe97483
+                  username: john_doe
+        403:
+          description: Username or password is not valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: array
+                example:
+                  error:
+                    - Could not verify user
+    delete:
+      security: # Must by admin user
+        - bearerAuth: []
+      operationId: src.controllers.user.delete
+      summary: Delete a User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              example:
+                username: john_doe
+      responses:
+        200:
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                example:
+                  message: Deletion successful
+        403:
+          description: Username or password is not valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  error:
+                    type: array
+                example:
+                  message: Deletion unsuccessful
+                  error:
+                    - Could not verify user
+
+  /games/:
+    get:
+      # security:
+      #   - bearerAuth: []
+      operationId: src.controllers.game.get
+      summary: Get a list of running games
+      responses:
+        200:
+          description: Returned list successfully
+      #     content:
+      #       application/json:
+      #         schema:
+      #           type: object
+      #           properties:
+      #             message:
+      #               type: string
+      #           example:
+      #             username: john_doe
+      #             password: "12345678"
